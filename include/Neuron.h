@@ -19,6 +19,9 @@ public:
     void derivation_fast_sigmoid();
 
 public:
+    //Setters
+    void setCurrentVal(double val) {this->currentVal = val;}
+
     // Getters
     double getCurrentVal() {return this->currentVal;}
     double getActivatedVal() {return this->activatedVal;}

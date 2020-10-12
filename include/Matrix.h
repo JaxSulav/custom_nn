@@ -20,13 +20,13 @@ public:
 
     // Getters
     double getValue(int row, int col) {return this->matrixVals.at(row).at(col);}
+    int getRows() {return this->rows;}
+    int getCols() {return this->cols;}
+    
 private:
     std::vector<std::vector<double>> matrixVals;
 
     int rows;
     int cols;
-
-public:
-    int getRows() {return this->rows;}
-    int getCols() {return this->cols;}
+    
 };

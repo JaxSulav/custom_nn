@@ -44,6 +44,6 @@ void Matrix::print_matrix()
         for (int j=0; j<cols; j++){
             std::cout << this->matrixVals.at(i).at(j) << "\t";
         }
-        std::cout << "\n";
+        std::cout << "\n\n";
     }
 }

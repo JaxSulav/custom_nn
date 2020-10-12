@@ -11,6 +11,11 @@ class NeuralNetwork
 public:
     NeuralNetwork(std::vector<int> topology);
 
+public:
+    void set_inputs_in_input_layer(std::vector<double> inputs);
+
+    void print_layers_values();
+
 private:
     // stores the values of number of neurons in each layer as index of the layers
     // If the nn contains 3 input layers, 2 hidden and 2 output layer,
@@ -22,5 +27,7 @@ private:
 
     // Number of weight matrices, size of this will be (size of topology - 1)
     std::vector<Matrix *> weightMatrices;
+
+    std::vector<double> inputs;
 
 };

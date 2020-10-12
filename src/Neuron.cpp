@@ -3,8 +3,8 @@
 Neuron::Neuron(double val)
 {
     this->currentVal = val;
-    activation_fast_sigmoid();
-    derivation_fast_sigmoid();
+    // activation_fast_sigmoid();
+    // derivation_fast_sigmoid();
 }
 
 void Neuron::activation_fast_sigmoid() 
