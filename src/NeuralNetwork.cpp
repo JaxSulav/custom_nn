@@ -5,7 +5,8 @@ NeuralNetwork::NeuralNetwork(std::vector<int> topology)
 {
     /* topology vector stores the values of number of neurons in each layer as index of the layers. If the nn contains 3 input layers, 2 hidden and 2 output layer, topology vector contains (3,2,2) */
 
-
+    this->topology = topology;
+    
     /* Create and push layers to layers vector */
     for (int i=0; i<topology.size(); i++){
         // Create a layer where number of neurons is the value at ith index of topology vector
