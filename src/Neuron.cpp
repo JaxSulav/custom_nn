@@ -1,6 +1,7 @@
 #include "../include/Neuron.h"
 
-Neuron::Neuron(double val){
+Neuron::Neuron(double val)
+{
     this->currentVal = val;
     activation_fast_sigmoid();
     derivation_fast_sigmoid();
