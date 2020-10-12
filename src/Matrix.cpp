@@ -24,6 +24,19 @@ Matrix::Matrix(int rows, int cols, bool setRandom)
     }
 }
 
+Matrix* Matrix::transpose() 
+{
+    Matrix *m = new Matrix(this->cols, this->rows, false);
+
+    for (int i=0; i<rows; i++){
+        for (int j=0; j<cols; j++){
+            m->setValue(j, i, this->getValue(i, j));
+        }
+    }
+
+    return m;
+}
+
 
 void Matrix::print_matrix() 
 {

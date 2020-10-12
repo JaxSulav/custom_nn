@@ -14,6 +14,12 @@ public:
 
     void print_matrix();
 
+public:
+    // Setters
+    void setValue(int row, int col, double val) { this->matrixVals.at(row).at(col) = val;}
+
+    // Getters
+    double getValue(int row, int col) {return this->matrixVals.at(row).at(col);}
 private:
     std::vector<std::vector<double>> matrixVals;
 

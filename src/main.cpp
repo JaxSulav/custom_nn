@@ -12,8 +12,13 @@ int main(int argc, char const *argv[])
 
     std:: cout << gen_rand_num_norm_dist() << "\n" << std::endl;
 
-    Matrix *m = new Matrix(3, 3, true);
+    Matrix *m = new Matrix(3, 2, true);
     m->print_matrix();
+
+    std::cout << "-----Transpose-------" << std::endl;
+
+    Matrix *mT = m->transpose();
+    mT->print_matrix();
 
     return 0;
 }
