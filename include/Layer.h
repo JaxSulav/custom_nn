@@ -16,10 +16,12 @@ public:
     Layer(int size);
 
 public:
-    void set_neuron_val(int neuronIdx, double neuronVal);
-    
     // convert neurons vector to 1D matrix for matrix multiplication in feed forward process
     Matrix *convert_to_1D_matrix(int neuronValType);
+
+public:
+    // Setters
+    void set_neuron_val(int neuronIdx, double neuronVal) {this->neurons.at(neuronIdx)->setCurrentVal(neuronVal);}
 
 private:
     int size;

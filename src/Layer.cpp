@@ -15,12 +15,6 @@ Layer::Layer(int size)
 }
 
 
-void Layer::set_neuron_val(int neuronIdx, double neuronVal) 
-{
-    this->neurons.at(neuronIdx)->setCurrentVal(neuronVal);
-}
-
-
 Matrix* Layer::convert_to_1D_matrix(int neuronValType) 
 {
     // Create new matrix with 1 row and number of neurons in input layer as columns, with values 0

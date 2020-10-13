@@ -4,6 +4,7 @@
 #include "../include/Matrix.h"
 #include "../include/NeuralNetwork.h"
 
+
 int main(int argc, char const *argv[])
 {
     // Neuron *n1 = new Neuron(0.9);
@@ -22,9 +23,9 @@ int main(int argc, char const *argv[])
     // mT->print_matrix();
 
     std::vector<int> topology;
-    topology.push_back(3);
-    topology.push_back(2);
-    topology.push_back(2);
+    topology.push_back(3); // Input Layer   
+    topology.push_back(2); // Hidden Layer
+    topology.push_back(2); // Output Layer
 
     std::vector<double> inputs;
     inputs.push_back(1.0);
@@ -33,6 +34,7 @@ int main(int argc, char const *argv[])
 
     NeuralNetwork *nn = new NeuralNetwork(topology);
     nn->set_inputs_in_input_layer(inputs);
+    nn->feed_forward();
     nn->print_layers_values();
 
     return 0;

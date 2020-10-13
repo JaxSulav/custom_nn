@@ -44,13 +44,51 @@ void NeuralNetwork::set_inputs_in_input_layer(std::vector<double> inputs)
 }
 
 
+void NeuralNetwork::feed_forward() 
+{
+    /* Loop through each layer, get the neuron matrix for each layer and weights matrix and multiply these matrices. Also, set values for neurons in next layer */
+
+    // We only loop till the (layers.size() -1) because the output neurons doesnot have weights
+
+    for (int i=0; i<(int)(this->layers.size()-1); i++){
+        Matrix *m1;
+
+        // If the layer is input layer, get neuron matrix, else get the activated values of neuron matrix
+        if (i == 0){
+            m1 = this->getNeuronMatrix(i);
+        }else{
+            m1 = this->getActivatedNeuronMatrix(i);
+        }
+
+        // Get weight matrix and multiply m1 and m2
+        Matrix *m2 = this->getWeightMatrix(i);
+        Matrix *m3 = multiply_matrices(m1, m2);
+
+        // Loop through the columns of multiplied matrix to set the values of neurons in the next layer
+        for (int x=0; x<m3->getCols(); x++){
+            this->set_each_neuron_value(i+1, x, m3->getValue(0, x));
+        }
+    }
+}
+
+
 void NeuralNetwork::print_layers_values() 
 {
     for (int i=0; i<(int)layers.size(); i++){
         std::cout << "LAYER: " << i << " :" << std::endl;
-        // if (i == 0){
+        if (i == 0){
             Matrix *m = this->layers.at(i)->convert_to_1D_matrix(NEURON_CURRENT_VAL);
             m->print_matrix();
-        // }
+        }else{
+            Matrix *m = this->layers.at(i)->convert_to_1D_matrix(NEURON_ACTIVATED_VAL);
+            m->print_matrix();
+        }
+
+        if (i < (int)this->layers.size()-1){
+            std::cout << "Weights Matrix: " << std::endl;
+            this->getWeightMatrix(i)->print_matrix();
+        }
+        std::cout << "--------------------------" << std::endl;
+
     }
 }
