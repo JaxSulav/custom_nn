@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.5)
 
-set (P_NAME "ann")
+set (P_NAME "nn")
 
 project (${P_NAME})
 #find_package(OpenCV REQUIRED)
