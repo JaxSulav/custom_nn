@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
+
 #include "Layer.h"
 #include "Matrix.h"
 #include "Utils.h"
@@ -19,15 +21,23 @@ public:
 
     void print_layers_values();
 
+    void calculate_errors();
+
+    void calculate_MSE();
+
 public:
     //Setters
     void set_each_neuron_value(int layerIdx, int neuronIdx, double val) {this->layers.at(layerIdx)->set_neuron_val(neuronIdx, val);}
+    void setOutputTarget(std::vector<double> target) {this->target = target;}
 
     // Getters
     Matrix *getNeuronMatrix(int index) {return this->layers.at(index)->convert_to_1D_matrix(NEURON_CURRENT_VAL);}
     Matrix *getActivatedNeuronMatrix(int index) {return this->layers.at(index)->convert_to_1D_matrix(NEURON_ACTIVATED_VAL);}
     Matrix *getDerivativeNeuronMatrix(int index) {return this->layers.at(index)->convert_to_1D_matrix(NEURON_DERIVATIVE_VAL);}
     Matrix *getWeightMatrix(int index) {return this->weightMatrices.at(index);}
+
+    double getTotalError() {return this->totalError;}
+    std::vector<double> getErrors() {return this->errors;}
 
 private:
     // stores the values of number of neurons in each layer as index of the layers
@@ -42,5 +52,11 @@ private:
     std::vector<Matrix *> weightMatrices;
 
     std::vector<double> inputs;
+
+    std::vector<double> target;
+    double totalError;
+    std::vector<double> errors;
+    std::vector<double> savedErrors;
+
 
 };

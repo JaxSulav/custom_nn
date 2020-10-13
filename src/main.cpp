@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
     std::vector<int> topology;
     topology.push_back(3); // Input Layer   
     topology.push_back(2); // Hidden Layer
-    topology.push_back(2); // Output Layer
+    topology.push_back(3); // Output Layer
 
     std::vector<double> inputs;
     inputs.push_back(1.0);
@@ -34,8 +34,12 @@ int main(int argc, char const *argv[])
 
     NeuralNetwork *nn = new NeuralNetwork(topology);
     nn->set_inputs_in_input_layer(inputs);
+    nn->setOutputTarget(inputs);
     nn->feed_forward();
+    nn->calculate_MSE();
+
     nn->print_layers_values();
 
+    std::cout << "Total error: " << nn->getTotalError() << std::endl;
     return 0;
 }

@@ -23,6 +23,9 @@ public:
     // Setters
     void set_neuron_val(int neuronIdx, double neuronVal) {this->neurons.at(neuronIdx)->setCurrentVal(neuronVal);}
 
+    // Getters
+    std::vector<Neuron *> get_neurons(){ return this->neurons;}
+
 private:
     int size;
     std::vector<Neuron *> neurons;

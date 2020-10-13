@@ -92,3 +92,40 @@ void NeuralNetwork::print_layers_values()
 
     }
 }
+
+void NeuralNetwork::calculate_errors() 
+{
+    if (this->target.size()==0){
+        std::cout << "No output targets" << std::endl;
+    }
+
+    // The size of the target vector should be equal to the number of nurons in output layer
+    if (this->target.size() != this->layers.at(this->layers.size()-1)->get_neurons().size()){
+        std::cout << "Target size doesnot match output size" << std::endl;
+    }
+
+    int outputLayerIdx = this->layers.size()-1;
+    std::vector<Neuron *> outputNeurons = this->layers.at(outputLayerIdx)->get_neurons();
+
+    // calculate error and push to errors vector
+    for (int i=0; i<(int)target.size(); i++){
+        double tempErr = (outputNeurons.at(i)->getActivatedVal() - target.at(i));
+        errors.push_back(tempErr);
+    }
+
+}
+
+void NeuralNetwork::calculate_MSE() 
+{
+    this->calculate_errors();
+    double val = 0.00;
+
+    for (int i=0; i<(int)this->errors.size(); i++){
+        val += pow(errors.at(i), 2);
+    }
+
+    double MSE = pow(val/(double)errors.size(), 0.5);
+    this->totalError = MSE;
+
+    savedErrors.push_back(totalError);
+}
