@@ -37,10 +37,10 @@ int main(int argc, char const *argv[])
     nn->setOutputTarget(inputs);
 
 
-    for (int i=0; i<100000; i++){
+    for (int i=0; i<10000; i++){
         nn->feed_forward();
         nn->calculate_MSE();
-        // nn->print_layers_values();
+        nn->print_layers_values();
         std::cout << "Total error: " << nn->getTotalError() << std::endl;
         nn->back_propagation();
         std::cout << std::endl;

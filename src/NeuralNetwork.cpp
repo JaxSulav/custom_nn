@@ -94,7 +94,7 @@ void NeuralNetwork::print_layers_values()
 }
 
 
-void NeuralNetwork::calculate_errors() 
+void NeuralNetwork::calculate_MSE() 
 {
     if (this->target.size()==0){
         std::cout << "No output targets" << std::endl;
@@ -112,24 +112,13 @@ void NeuralNetwork::calculate_errors()
     for (int i=0; i<(int)target.size(); i++){
         double tempErr = (outputNeurons.at(i)->getActivatedVal() - target.at(i));
         errors.push_back(tempErr);
+        this->totalError += pow(tempErr, 2);
     }
 
-}
+    this->totalError = 0.5 * this->totalError;
+    
+    savedErrors.push_back(this->totalError);
 
-
-void NeuralNetwork::calculate_MSE() 
-{
-    this->calculate_errors();
-    double val = 0.00;
-
-    for (int i=0; i<(int)this->errors.size(); i++){
-        val += pow(errors.at(i), 2);
-    }
-
-    double MSE = pow(val/(double)errors.size(), 0.5);
-    this->totalError = MSE;
-
-    savedErrors.push_back(totalError);
 }
 
 
