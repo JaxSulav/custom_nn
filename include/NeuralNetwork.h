@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 #include "Layer.h"
 #include "Matrix.h"
@@ -24,6 +25,8 @@ public:
     void calculate_errors();
 
     void calculate_MSE();
+
+    void back_propagation();
 
 public:
     //Setters
@@ -57,6 +60,8 @@ private:
     double totalError;
     std::vector<double> errors;
     std::vector<double> savedErrors;
+
+    std::vector<Matrix *> gradientMatrices;
 
 
 };

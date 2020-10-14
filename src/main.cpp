@@ -35,11 +35,17 @@ int main(int argc, char const *argv[])
     NeuralNetwork *nn = new NeuralNetwork(topology);
     nn->set_inputs_in_input_layer(inputs);
     nn->setOutputTarget(inputs);
-    nn->feed_forward();
-    nn->calculate_MSE();
 
-    nn->print_layers_values();
 
-    std::cout << "Total error: " << nn->getTotalError() << std::endl;
+    for (int i=0; i<100000; i++){
+        nn->feed_forward();
+        nn->calculate_MSE();
+        // nn->print_layers_values();
+        std::cout << "Total error: " << nn->getTotalError() << std::endl;
+        nn->back_propagation();
+        std::cout << std::endl;
+    }
+
+
     return 0;
 }
