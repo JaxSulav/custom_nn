@@ -133,7 +133,7 @@ void NeuralNetwork::back_propagation()
 
     Matrix *gradientsOp = new Matrix (1, this->layers.at(outputLayerIdx)->get_neurons().size(), false);
 
-    for (int i=0; i< (int)this->layers.at(outputLayerIdx)->get_neurons().size(); i++){
+    for (int i=0; i< (int)this->errors.size(); i++){
         double derivativeVal = derivativeValOfOutputNeurons->getValue(0, i);
         double error = this->errors.at(i);
         double gradient = derivativeVal * error;
@@ -172,7 +172,7 @@ void NeuralNetwork::back_propagation()
     // From hidden to input
     for (int i=lastHiddenLayerIdx; i>0; i--){
         Layer *l = this->layers.at(i);
-        Matrix *derivativeValOfHiddenNeurons = l->convert_to_1D_matrix(NEURON_DERIVATIVE_VAL);
+        // Matrix *derivativeValOfHiddenNeurons = l->convert_to_1D_matrix(NEURON_DERIVATIVE_VAL);
         Matrix *gradientsHidden = new Matrix (1, l->get_neurons().size(), false);
         Matrix *activatedValOfHiddenNeurons = l->convert_to_1D_matrix(NEURON_ACTIVATED_VAL);
 
@@ -223,6 +223,8 @@ void NeuralNetwork::back_propagation()
     std::reverse (newWeightsAll.begin(), newWeightsAll.end());
 
     this->weightMatrices = newWeightsAll; 
+
+    this->errors.clear();
     
     std::cout << "Backpropagation finished" << std::endl;
 }   

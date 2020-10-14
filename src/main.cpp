@@ -37,7 +37,7 @@ int main(int argc, char const *argv[])
     nn->setOutputTarget(inputs);
 
 
-    for (int i=0; i<10000; i++){
+    for (int i=0; i<100; i++){
         nn->feed_forward();
         nn->calculate_MSE();
         nn->print_layers_values();
