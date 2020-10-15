@@ -14,10 +14,10 @@ NeuralNetwork::NeuralNetwork(std::vector<int> topology)
     /* Create and push layers to layers vector */
     for (int i=0; i<(int)topology.size(); i++){
         // Create a layer where number of neurons is the value at ith index of topology vector
-        Layer *l = new Layer(topology.at(i));
+        this->l = new Layer(topology.at(i));
 
         // Push the layer to the layers vector which stores the layers of our neural network
-        this->layers.push_back(l);
+        this->layers.push_back(this->l);
     }
 
 
@@ -25,11 +25,24 @@ NeuralNetwork::NeuralNetwork(std::vector<int> topology)
     /* The size of weightMatrices will be (size of topology vec - 1) */
     for (int i=0; i<(int)(topology.size()-1); i++){
         // Create a weight matrix for 2 consecutive layers where the number of rows will be the number of neurons at first layer and number of columns will be the number of neurons at second layer. And the number of neurons in each layer is stored in topology vector
-        Matrix *m = new Matrix(topology.at(i), topology.at(i+1), true);
+        this->m = new Matrix(topology.at(i), topology.at(i+1), true);
 
         // Push the weight matrix to the weightMatrices vector 
-        this->weightMatrices.push_back(m);
+        this->weightMatrices.push_back(this->m);
     }
+}
+
+NeuralNetwork::~NeuralNetwork() 
+{
+    delete l;
+    delete m;
+    delete m3;
+    delete gradient;
+    delete gradientsOp;
+    delete gradientsHidden;
+    delete deltaWeightMatrixOp;
+    delete deltaWeightsMatrixHidden;
+    delete updatedWeightsMatrixHidden;
 }
 
 
@@ -62,11 +75,11 @@ void NeuralNetwork::feed_forward()
 
         // Get weight matrix and multiply m1 and m2
         Matrix *m2 = this->getWeightMatrix(i);
-        Matrix *m3 = multiply_matrices(m1, m2);
+        this->m3 = multiply_matrices(m1, m2);
 
         // Loop through the columns of multiplied matrix to set the values of neurons in the next layer
-        for (int x=0; x<m3->getCols(); x++){
-            this->set_each_neuron_value(i+1, x, m3->getValue(0, x));
+        for (int x=0; x<this->m3->getCols(); x++){
+            this->set_each_neuron_value(i+1, x, this->m3->getValue(0, x));
         }
     }
 }
@@ -77,11 +90,11 @@ void NeuralNetwork::print_layers_values()
     for (int i=0; i<(int)layers.size(); i++){
         std::cout << "LAYER: " << i << " :" << std::endl;
         if (i == 0){
-            Matrix *m = this->layers.at(i)->convert_to_1D_matrix(NEURON_CURRENT_VAL);
-            m->print_matrix();
+            Matrix *mat = this->layers.at(i)->convert_to_1D_matrix(NEURON_CURRENT_VAL);
+            mat->print_matrix();
         }else{
-            Matrix *m = this->layers.at(i)->convert_to_1D_matrix(NEURON_ACTIVATED_VAL);
-            m->print_matrix();
+            Matrix *mat = this->layers.at(i)->convert_to_1D_matrix(NEURON_ACTIVATED_VAL);
+            mat->print_matrix();
         }
 
         if (i < (int)this->layers.size()-1){
@@ -125,46 +138,45 @@ void NeuralNetwork::calculate_MSE()
 void NeuralNetwork::back_propagation() 
 {
     std::vector<Matrix *> newWeightsAll;
-    Matrix *gradient;
 
     // Going from op to last hidden layer
     int outputLayerIdx = this->layers.size()-1;
     Matrix *derivativeValOfOutputNeurons = this->layers.at(outputLayerIdx)->convert_to_1D_matrix(NEURON_DERIVATIVE_VAL);
 
-    Matrix *gradientsOp = new Matrix (1, this->layers.at(outputLayerIdx)->get_neurons().size(), false);
+    this->gradientsOp = new Matrix (1, this->layers.at(outputLayerIdx)->get_neurons().size(), false);
 
     for (int i=0; i< (int)this->errors.size(); i++){
         double derivativeVal = derivativeValOfOutputNeurons->getValue(0, i);
         double error = this->errors.at(i);
         double gradient = derivativeVal * error;
-        gradientsOp->setValue(0, i, gradient);
+        this->gradientsOp->setValue(0, i, gradient);
     }
 
     int lastHiddenLayerIdx = outputLayerIdx - 1;
     Layer *LastHiddenLayer = this->layers.at(lastHiddenLayerIdx);
     Matrix *oldWeightsMatrixOp = this->weightMatrices.at(lastHiddenLayerIdx);
-    Matrix *deltaWeightMatrixOp = multiply_matrices(gradientsOp->transpose(), LastHiddenLayer->convert_to_1D_matrix(NEURON_DERIVATIVE_VAL))->transpose();
+    this->deltaWeightMatrixOp = multiply_matrices(this->gradientsOp->transpose(), LastHiddenLayer->convert_to_1D_matrix(NEURON_DERIVATIVE_VAL))->transpose();
 
-    Matrix *updatedWeightsMatrixOp = new Matrix(deltaWeightMatrixOp->getRows(), deltaWeightMatrixOp->getCols(), false);
+    this->updatedWeightsMatrixOp = new Matrix(this->deltaWeightMatrixOp->getRows(), this->deltaWeightMatrixOp->getCols(), false);
 
-    for (int i=0; i<deltaWeightMatrixOp->getRows(); i++){
-        for (int j=0; j<deltaWeightMatrixOp->getCols(); j++){
+    for (int i=0; i<this->deltaWeightMatrixOp->getRows(); i++){
+        for (int j=0; j<this->deltaWeightMatrixOp->getCols(); j++){
             double oldWeight = oldWeightsMatrixOp->getValue(i, j);
-            double deltaWeight = deltaWeightMatrixOp->getValue(i, j);
+            double deltaWeight = this->deltaWeightMatrixOp->getValue(i, j);
             double newWeight =  oldWeight - deltaWeight;
 
-            updatedWeightsMatrixOp->setValue(i, j, newWeight);
+            this->updatedWeightsMatrixOp->setValue(i, j, newWeight);
         }
     }
 
-    newWeightsAll.push_back(updatedWeightsMatrixOp);
+    newWeightsAll.push_back(this->updatedWeightsMatrixOp);
 
     // Get the gradients to the right
-    gradient = new Matrix (gradientsOp->getRows(), gradientsOp->getCols(), false);
+    this->gradient = new Matrix (this->gradientsOp->getRows(), this->gradientsOp->getCols(), false);
 
-    for (int i=0; i<gradientsOp->getRows(); i++){
-        for (int j=0; j<gradientsOp->getCols(); j++){
-            gradient->setValue(i, j, gradientsOp->getValue(i, j));
+    for (int i=0; i<this->gradientsOp->getRows(); i++){
+        for (int j=0; j<this->gradientsOp->getCols(); j++){
+            this->gradient->setValue(i, j, this->gradientsOp->getValue(i, j));
         } 
     }
 
@@ -173,7 +185,7 @@ void NeuralNetwork::back_propagation()
     for (int i=lastHiddenLayerIdx; i>0; i--){
         Layer *l = this->layers.at(i);
         // Matrix *derivativeValOfHiddenNeurons = l->convert_to_1D_matrix(NEURON_DERIVATIVE_VAL);
-        Matrix *gradientsHidden = new Matrix (1, l->get_neurons().size(), false);
+        this->gradientsHidden = new Matrix (1, l->get_neurons().size(), false);
         Matrix *activatedValOfHiddenNeurons = l->convert_to_1D_matrix(NEURON_ACTIVATED_VAL);
 
         Matrix *weightMatrix = this->weightMatrices.at(i);
@@ -182,42 +194,42 @@ void NeuralNetwork::back_propagation()
         for (int i=0; i<weightMatrix->getRows(); i++){
             double sum = 0;
             for (int j=0; j<weightMatrix->getCols(); j++){
-                double product = gradient->getValue(0, j) * weightMatrix->getValue(i, j);
+                double product = this->gradient->getValue(0, j) * weightMatrix->getValue(i, j);
                 
                 sum += product;
             }
 
             double gradientVal = sum * activatedValOfHiddenNeurons->getValue(0, i);
 
-            gradientsHidden->setValue(0, i, gradientVal);
+            this->gradientsHidden->setValue(0, i, gradientVal);
         }
 
         Matrix *leftNeuronsMatrix = (i-1) == 0 ? this->layers.at(0)->convert_to_1D_matrix(NEURON_CURRENT_VAL) : this->layers.at(i-1)->convert_to_1D_matrix(NEURON_ACTIVATED_VAL);
 
-        Matrix *deltaWeightsMatrixHidden = multiply_matrices(gradientsHidden->transpose(), leftNeuronsMatrix)->transpose();
+        this->deltaWeightsMatrixHidden = multiply_matrices(this->gradientsHidden->transpose(), leftNeuronsMatrix)->transpose();
 
 
-        Matrix *updatedWeightsMatrixHidden = new Matrix (deltaWeightsMatrixHidden->getRows(), deltaWeightsMatrixHidden->getCols(), false);
+        this->updatedWeightsMatrixHidden = new Matrix (this->deltaWeightsMatrixHidden->getRows(), this->deltaWeightsMatrixHidden->getCols(), false);
 
-        for (int i=0; i<updatedWeightsMatrixHidden->getRows(); i++){
-            for (int j=0; j<updatedWeightsMatrixHidden->getCols(); j++){
+        for (int i=0; i<this->updatedWeightsMatrixHidden->getRows(); i++){
+            for (int j=0; j<this->updatedWeightsMatrixHidden->getCols(); j++){
                 double oldWeightH = oldWeightsMatrixHidden->getValue(i, j);
-                double deltaWeightH = deltaWeightsMatrixHidden->getValue(i, j);
+                double deltaWeightH = this->deltaWeightsMatrixHidden->getValue(i, j);
                 double newWeightH = oldWeightH - deltaWeightH;
 
-                updatedWeightsMatrixHidden->setValue(i, j, newWeightH);
+                this->updatedWeightsMatrixHidden->setValue(i, j, newWeightH);
             } 
         }
 
-        gradient = new Matrix (gradientsHidden->getRows(), gradientsHidden->getCols(), false);
+        this->gradient = new Matrix (this->gradientsHidden->getRows(), this->gradientsHidden->getCols(), false);
 
-        for (int i=0; i<gradientsHidden->getRows(); i++){
-            for (int j=0; j<gradientsHidden->getCols(); j++){
-                gradient->setValue(i, j, gradientsHidden->getValue(i, j));
+        for (int i=0; i<this->gradientsHidden->getRows(); i++){
+            for (int j=0; j<this->gradientsHidden->getCols(); j++){
+                this->gradient->setValue(i, j, this->gradientsHidden->getValue(i, j));
             } 
         }
 
-        newWeightsAll.push_back(updatedWeightsMatrixHidden);
+        newWeightsAll.push_back(this->updatedWeightsMatrixHidden);
     }
 
     std::reverse (newWeightsAll.begin(), newWeightsAll.end());

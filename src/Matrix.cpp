@@ -24,17 +24,25 @@ Matrix::Matrix(int rows, int cols, bool setRandom)
     }
 }
 
+
+Matrix::~Matrix() 
+{
+    if (m){
+        delete m;
+    }
+}
+
 Matrix* Matrix::transpose() 
 {
-    Matrix *m = new Matrix(this->cols, this->rows, false);
+    this->m = new Matrix(this->cols, this->rows, false);
 
     for (int i=0; i<rows; i++){
         for (int j=0; j<cols; j++){
-            m->setValue(j, i, this->getValue(i, j));
+            this->m->setValue(j, i, this->getValue(i, j));
         }
     }
 
-    return m;
+    return this->m;
 }
 
 

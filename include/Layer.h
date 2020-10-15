@@ -14,6 +14,7 @@ class Layer
 {
 public:
     Layer(int size);
+    ~Layer();
 
 public:
     // convert neurons vector to 1D matrix for matrix multiplication in feed forward process
@@ -27,6 +28,8 @@ public:
     std::vector<Neuron *> get_neurons(){ return this->neurons;}
 
 private:
+    Neuron *n;
+    Matrix *m;
     int size;
     std::vector<Neuron *> neurons;
     

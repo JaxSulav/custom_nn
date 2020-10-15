@@ -14,6 +14,7 @@ class NeuralNetwork
 {
 public:
     NeuralNetwork(std::vector<int> topology);
+    ~NeuralNetwork();
 
 public:
     void set_inputs_in_input_layer(std::vector<double> inputs);
@@ -41,6 +42,18 @@ public:
 
     double getTotalError() {return this->totalError;}
     std::vector<double> getErrors() {return this->errors;}
+
+private:
+    Layer *l;
+    Matrix *m;
+    Matrix *m3;
+    Matrix *gradient;
+    Matrix *gradientsOp;
+    Matrix *gradientsHidden;
+    Matrix *deltaWeightMatrixOp;
+    Matrix *updatedWeightsMatrixOp;
+    Matrix *deltaWeightsMatrixHidden;
+    Matrix *updatedWeightsMatrixHidden;
 
 private:
     // stores the values of number of neurons in each layer as index of the layers

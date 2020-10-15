@@ -24,7 +24,7 @@ int main(int argc, char const *argv[])
 
     std::vector<int> topology;
     topology.push_back(3); // Input Layer   
-    topology.push_back(2); // Hidden Layer
+    topology.push_back(5); // Hidden Layer
     topology.push_back(3); // Output Layer
 
     std::vector<double> inputs;
@@ -37,7 +37,7 @@ int main(int argc, char const *argv[])
     nn->setOutputTarget(inputs);
 
 
-    for (int i=0; i<100; i++){
+    for (int i=0; i<1000; i++){
         nn->feed_forward();
         nn->calculate_MSE();
         nn->print_layers_values();
@@ -46,6 +46,7 @@ int main(int argc, char const *argv[])
         std::cout << std::endl;
     }
 
+    delete nn;
 
     return 0;
 }

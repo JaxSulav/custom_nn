@@ -7,6 +7,7 @@ class Matrix
 {
 public:
     Matrix(int rows, int cols, bool setRandom);
+    ~Matrix();
 
 public:
     // Pointer to Matrix, transpose function
@@ -24,6 +25,7 @@ public:
     int getCols() {return this->cols;}
     
 private:
+    Matrix *m;
     std::vector<std::vector<double>> matrixVals;
 
     int rows;
