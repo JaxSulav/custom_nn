@@ -88,7 +88,9 @@ void NeuralNetwork::feed_forward()
 void NeuralNetwork::print_layers_values() 
 {
     for (int i=0; i<(int)layers.size(); i++){
-        std::cout << "LAYER: " << i << " :" << std::endl;
+        if (DEBUG)
+            std::cout << "LAYER: " << i << " :" << std::endl;
+
         if (i == 0){
             Matrix *mat = this->layers.at(i)->convert_to_1D_matrix(NEURON_CURRENT_VAL);
             mat->print_matrix();
@@ -98,10 +100,13 @@ void NeuralNetwork::print_layers_values()
         }
 
         if (i < (int)this->layers.size()-1){
-            std::cout << "Weights Matrix: " << std::endl;
+            if (DEBUG)
+                std::cout << "Weights Matrix: " << std::endl;
+
             this->getWeightMatrix(i)->print_matrix();
         }
-        std::cout << "--------------------------" << std::endl;
+        if (DEBUG)
+            std::cout << "--------------------------" << std::endl;
 
     }
 }
