@@ -1,5 +1,47 @@
 #include "../include/Utils.h"
 
+std::string DEBUG_STRING = "false";
+bool DEBUG = false;
+int TEST_INT = 0;
+std::string TEST_STRING = "";
+
+// Parse the configurations from cfg file
+int parse_config(std::string cfgFile)
+{
+    std::ifstream input;
+    input.open(cfgFile);
+
+    if (!input.is_open()){
+        return 1;
+    }
+
+    int idx = 0;
+    while(input){
+        std::string line;
+        std::getline(input, line, ':');
+
+        input >> std::ws; // For Whitespaces
+
+        if (idx == 0){
+            input >> DEBUG_STRING;
+            if (DEBUG_STRING == "true"){
+                DEBUG = true;
+            }
+        }else if (idx == 1){
+            input >> TEST_INT;
+        }else if (idx == 2){
+            input >> TEST_STRING;
+        }
+        else{
+            break;
+        }
+
+        idx++;
+    }
+
+    return 0;
+}
+
 
 // Generate random number from normal distribution with a mean of 0 and standard deviation of 1
 double gen_rand_num_norm_dist()

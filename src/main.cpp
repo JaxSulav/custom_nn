@@ -7,20 +7,11 @@
 
 int main(int argc, char const *argv[])
 {
-    // Neuron *n1 = new Neuron(0.9);
-    // std::cout << "val:" << n1->getCurrentVal() << std::endl;
-    // std::cout << "val1:" << n1->getActivatedVal() << std::endl;
-    // std::cout << "val2:" << n1->getDerivativeVal() << std::endl;
-
-    // std:: cout << gen_rand_num_norm_dist() << "\n" << std::endl;
-
-    // Matrix *m = new Matrix(3, 2, true);
-    // m->print_matrix();
-
-    // std::cout << "-----Transpose-------" << std::endl;
-
-    // Matrix *mT = m->transpose();
-    // mT->print_matrix();
+    parse_config("../config.cfg");
+    if (DEBUG) {
+        std::cout << TEST_INT << "\n";
+        std::cout << TEST_STRING << "\n";
+    }
 
     std::vector<int> topology;
     topology.push_back(3); // Input Layer   
@@ -37,7 +28,7 @@ int main(int argc, char const *argv[])
     nn->setOutputTarget(inputs);
 
 
-    for (int i=0; i<1000; i++){
+    for (int i=0; i<1; i++){
         nn->feed_forward();
         nn->calculate_MSE();
         nn->print_layers_values();
