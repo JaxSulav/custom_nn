@@ -20,7 +20,6 @@ int parse_config(std::string cfgFile)
         std::string line;
         std::getline(input, line, ':');
 
-        input >> std::ws; // For Whitespaces
 
         if (idx == 0){
             input >> DEBUG_STRING;
@@ -35,6 +34,8 @@ int parse_config(std::string cfgFile)
         else{
             break;
         }
+        
+        input >> std::ws; // For Whitespaces
 
         idx++;
     }
